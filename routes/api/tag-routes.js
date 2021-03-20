@@ -37,11 +37,11 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   // create a new tag
-    /* req.body should look like this...
-    {
-      tag_name: "Basketball",
-    }
-  */
+  /* req.body should look like this...
+  {
+    tag_name: "Basketball",
+  }
+*/
   try {
     const tagData = await Tag.create(req.body);
     res.status(200).json(tagData);
@@ -57,23 +57,32 @@ router.put('/:id', (req, res) => {
       id: req.params.id,
     },
   })
-  .then((updatedTags) => res.json(updatedTags))
-  .catch((err) => {
-    // console.log(err);
-    res.status(400).json(err);
-  });
+    .then((updatedTags) => res.json(updatedTags))
+    .catch((err) => {
+      // console.log(err);
+      res.status(400).json(err);
+    });
 });
 
 router.delete('/:id', async (req, res) => {
   // delete on tag by its `id` value
   // delete one product by its `id` value
-  let tag = await Tag.findOne({ where: { id: req.params.id } }).catch(e => {
-    console.log(e.message);
-  });
-  if (!tag) {
-    console.log("err");
+  try {
+    const tagData = await Tag.destroy({
+      where: {
+        id: req.params.id
+      }
+    });
+
+    if (!tagData) {
+      res.status(404).json({ message: 'No location found with this id!' });
+      return;
+    }
+
+    res.status(200).json(tagData);
+  } catch (err) {
+    res.status(500).json(err);
   }
-  tag.destroy();
 });
 
 module.exports = router;

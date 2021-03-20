@@ -57,22 +57,31 @@ router.put('/:id', (req, res) => {
       id: req.params.id,
     },
   })
-  .then((updatedCategories) => res.json(updatedCategories))
-  .catch((err) => {
-    // console.log(err);
-    res.status(400).json(err);
-  });
+    .then((updatedCategories) => res.json(updatedCategories))
+    .catch((err) => {
+      // console.log(err);
+      res.status(400).json(err);
+    });
 });
 
 router.delete('/:id', async (req, res) => {
   // delete a category by its `id` value
-  let category = await Category.findOne({ where: { id: req.params.id } }).catch(e => {
-    console.log(e.message);
-  });
-  if (!tag) {
-    console.log("err");
+  try {
+    const categoryData = await Category.destroy({
+      where: {
+        id: req.params.id
+      }
+    });
+
+    if (!categoryData) {
+      res.status(404).json({ message: 'No location found with this id!' });
+      return;
+    }
+
+    res.status(200).json(categoryData);
+  } catch (err) {
+    res.status(500).json(err);
   }
-  category.destroy();
 });
 
 module.exports = router;

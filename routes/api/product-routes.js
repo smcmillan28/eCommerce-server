@@ -27,7 +27,7 @@ router.get('/:id', async (req, res) => {
     });
 
     if (!productData) {
-      res.status(404).json({ message: 'No product found with that id!'});
+      res.status(404).json({ message: 'No product found with that id!' });
       return;
     }
 
@@ -113,13 +113,22 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value
-  let product = await Product.findOne({where: {id: req.params.id}}).catch(e => {
-    console.log(e.message);
-  });
-  if (!product) {
-    console.log("err");
+  try {
+    const productData = await Product.destroy({
+      where: {
+        id: req.params.id
+      }
+    });
+
+    if (!productData) {
+      res.status(404).json({ message: 'No location found with this id!' });
+      return;
+    }
+
+    res.status(200).json(productData);
+  } catch (err) {
+    res.status(500).json(err);
   }
-  product.destroy();
 });
 
 module.exports = router;

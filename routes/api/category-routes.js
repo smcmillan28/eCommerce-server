@@ -57,6 +57,7 @@ router.put('/:id', (req, res) => {
       id: req.params.id,
     },
   });
+  // Need to factor in any products that were associated with category
 });
 
 router.delete('/:id', async (req, res) => {

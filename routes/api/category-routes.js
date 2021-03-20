@@ -56,8 +56,12 @@ router.put('/:id', (req, res) => {
     where: {
       id: req.params.id,
     },
+  })
+  .then((updatedCategories) => res.json(updatedCategories))
+  .catch((err) => {
+    // console.log(err);
+    res.status(400).json(err);
   });
-  // Need to factor in any products that were associated with category
 });
 
 router.delete('/:id', async (req, res) => {
